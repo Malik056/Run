@@ -85,6 +85,7 @@ public class PhoneAuthActivity extends AppCompatActivity {
         @Override
         public void onVerificationFailed(FirebaseException e) {
             Toast.makeText(getApplicationContext(), "Failed Authentication", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
         }
 
         @Override
