@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.example.mobeen.run.Models.Ground;
 import com.example.mobeen.run.Models.Venue;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -14,8 +15,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,6 +29,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private Context context;
+    public static List<Ground> grounds = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +40,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+
+
+
         mapFragment.getMapAsync(this);
     }
 
@@ -58,9 +65,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         call.enqueue(new Callback<List<Venue>>() {
             @Override
             public void onResponse(Call<List<Venue>> call, Response<List<Venue>> response) {
-                for(int i=0;i<response.body().size();i++){
+                Random random = new Random();
+                for(int i = 0; i < response.body().size(); i++){
 
                     LatLng venue1 = new LatLng(Double.parseDouble(response.body().get(i).getLatitude()),Double.parseDouble(response.body().get(i).getLongitude()));
+
+                    Ground g = new Ground();
+                    g.setName(response.body().get(i).getName());
+                    g.setPrice("" + (800 + random.nextInt(500)));
+                    g.setBooked(false);
+
                     mMap.addMarker(new MarkerOptions().position(venue1).title(response.body().get(i).getName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.stadium_icon)).snippet("venue"));
                 }
             }
